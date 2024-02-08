@@ -21,7 +21,7 @@ app.use(errorHandler);
 app.use("*", notFoundHandler);
 
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log("Server run on port" + " " + port);
 });

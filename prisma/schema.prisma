@@ -36,6 +36,8 @@ model User {
   user_uearch      User_Search[]
   payment          payment[]
   Shipping_Address Shipping_Address[]
+
+   
 }
 
 model Shipping_Address {
