@@ -17,7 +17,7 @@ exports.register = async (req, res, next) => {
       return createError(400, "confirm password not match");  
     
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
+    
     const data = {
       username,
       password: hashedPassword,
@@ -86,4 +86,8 @@ exports.resetPassword = (req, res, next) => {
   // เก็บ password ใหม่ ลง db
   res.json({ token, password });
 };
+
+exports.getme = (req,res,next) => {
+  res.json(req.user)
+}
 

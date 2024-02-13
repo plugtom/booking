@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const db = require('../models/db')
+const prisma = require("../config/prisma");
 
 module.exports = async (req, res, next) => {
   try {
@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
     const payload = jwt.verify(token,process.env.JWT_SECRET)
     console.log(payload)
     
-    const user = await db.user.findFirstOrThrow({where : {id: payload.id}})
+    const user = await prisma.user.findFirstOrThrow({where : {id: payload.id}})
     delete user.password
     console.log(user)
     req.user = user  
