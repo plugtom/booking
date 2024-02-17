@@ -8,7 +8,7 @@ const router = express.Router();
 //การจัดการproduct
 
   router.get("/product",adminController.getByproduct)
-  router.post("/product",adminController.createproduct);
+  router.post("/product",upload.array("images", 5),adminController.createproduct);
   router.put("/product/:productId",adminController.correctproduct);
   router.delete("/product/:productId",adminController.deleteproduct)
 

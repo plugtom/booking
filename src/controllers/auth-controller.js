@@ -36,33 +36,34 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const {username, password} = req.body
+  const { username, password } = req.body;
   try {
     // ตรวจสอบการป้อนข้อมูลที่ถูกต้อง
-    if (!(username.trim() && password.trim())) {
-      return createError(400,'username or password must not blank')
+    if (!(username && password && username.trim() && password.trim())) {
+      throw createError(400, 'Username or password must not be blank');
     }
     
     // ค้นหาข้อมูลผู้ใช้ในฐานข้อมูลโดยใช้ Prisma ORM
-    const user = await prisma.user.findFirstOrThrow({ where : { username }})
+    const user = await prisma.user.findFirstOrThrow({ where: { username } });
     
     // ตรวจสอบรหัสผ่าน
-    const pwOk = await bcrypt.compare(password, user.password)
+    const pwOk = await bcrypt.compare(password, user.password);
     if (!pwOk) {
-      return createError(400,'invalid login')
+      throw createError(400, 'Invalid login');
     }
     
     // ออก JWT token 
-    const payload = { id: user.id }
+    const payload = { id: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn:  process.env.JWT_EXPIRES_IN
-    })
-    console.log(token)
-    res.json({ token })
+      expiresIn: process.env.JWT_EXPIRES_IN
+    });
+    console.log(token);
+    res.json({ token });
   } catch(err) {
-    next(err)
+    next(err);
   }
 };
+
 
 exports.forgetPassword = (req, res, next) => {
   const { email } = req.body;

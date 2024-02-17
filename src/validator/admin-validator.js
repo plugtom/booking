@@ -18,3 +18,5 @@ exports.createProductSchema = Joi.object({
   yearpublication: Joi.date(),
   numberpages: Joi.string(),
 });
+
+

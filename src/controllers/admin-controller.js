@@ -10,7 +10,7 @@ exports.getByproduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
     const product = await prisma.product.findUnique({
-      where: { id: Number(productId) } // แก้ไขเป็นการใช้ findUnique และระบุ id ของสินค้า
+      where: { id: Number(productId) } 
     });
     res.json({ product });
   } catch (err) {
@@ -23,7 +23,7 @@ exports.createproduct = async (req, res, next) => {
   try {
     const value = await createProductSchema.validateAsync(req.body);
 
-    const { categoryId, authorid } = value; // ปรับแต่งการเข้าถึง categoryId และ authorid
+    const { categoryId, authorid } = value; 
 
     const newProduct = await prisma.product.create({
       data: {
