@@ -147,21 +147,21 @@ model Product {
   userId          Int           @map("user_id")
   category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categoryId      Int
-  author          author        @relation(fields: [authorid], references: [id])
-  authorid        Int
-  stock           Int           @default(0)
-  title           Int           @default(1)
-  unit            Int           @default(1)
-  priceHigh       Int           @map("price_high")
-  minPriceHigh    Int           @map("min_price_high")
+  author          author        @relation(fields: [authorId], references: [id])
+  authorId        Int
+  stock           Int?          @default(0)
+  title           String
+  unit            Int?          @default(1)
+  priceHigh       Int?          @map("price_high")
+  minPriceHigh    Int?          @map("min_price_high")
   priceMedium     Int?          @map("price_medium")
   minPriceMedium  Int?          @map("min_price_medium")
   priceLow        Int?          @map("price_low")
   minPriceLow     Int?          @map("min_price_low")
-  detail          String
-  publishing      String        @map("publishing")
-  yearpublication DateTime      @map("year_publication")
-  numberpages     String        @map("number_pages")
+  detail          String?
+  publishing      String?       @map("publishing")
+  yearpublication DateTime?     @map("year_publication")
+  numberpages     String?       @map("number_pages")
   Product_img     Product_img[]
   Favorite        Favorite[]
   cart            Cart[]

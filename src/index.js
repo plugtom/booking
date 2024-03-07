@@ -26,7 +26,7 @@ app.use("/showprodut",usershowpro)
 app.use("/admin",authenticate,admin,adminRoute)
 app.use("/user",authenticate,user, userRoutr)
 
-
+//
 
 
 

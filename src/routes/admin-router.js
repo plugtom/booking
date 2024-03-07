@@ -1,5 +1,6 @@
 const express = require("express")
 const adminController = require("../controllers/admin-controller");
+const categoryController = require("../controllers/category-controller");
 const upload = require("../middlewares/upload");
 
 
@@ -14,16 +15,16 @@ const router = express.Router();
 
   
   //การจัดการcategory
-  router.get("/category",adminController.getBycategory)
-  router.post("/category",adminController.createcategory);
-  router.put("/category:/categoryId",adminController.correctcategory);
-  router.delete("/category/:/categoryId",adminController.deletecategory)
+  router.get("/category",categoryController.getBycategory)
+  router.post("/category",categoryController.createcategory);
+  router.put("/category/:id",categoryController.updatecategory);
+  router.delete("/category/:id",categoryController.deletecategory)
 
 //การจัดการauthor
   router.get("/author",adminController.getByauthor)
   router.post("/author",adminController.createauthor);
-  router.put("/author:/authorId",adminController.correctauthor);
-  router.delete("/author/:/authorId",adminController.deleteauthor)
+  router.put("/author/:id",adminController.correctauthor);
+  router.delete("/author/:id",adminController.deleteauthor)
   
   
   module.exports = router;

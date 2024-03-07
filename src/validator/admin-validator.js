@@ -1,16 +1,16 @@
 const Joi = require("joi");
 
 exports.createProductSchema = Joi.object({
-  userId: Joi.number().required().strip(),
+  userId: Joi.number().required(),
   categoryId: Joi.number().required(),
-  authorid: Joi.number().required(),
-  stock: Joi.number().required(),
+  authorId: Joi.number().required(),
+  stock: Joi.number(),
   title: Joi.string().required(),
   unit: Joi.number(),
-  priceHigh: Joi.number().required(),
-  minPriceHigh: Joi.number().required(),
-  priceMedium: Joi.number().required(),
-  minPriceMedium: Joi.number().required(),
+  priceHigh: Joi.number(),
+  minPriceHigh: Joi.number(),
+  priceMedium: Joi.number(),
+  minPriceMedium: Joi.number(),
   priceLow: Joi.number(),
   minPriceLow: Joi.number(),
   detail: Joi.string(),
@@ -18,5 +18,3 @@ exports.createProductSchema = Joi.object({
   yearpublication: Joi.date(),
   numberpages: Joi.string(),
 });
-
-
