@@ -1,19 +1,16 @@
 const cloudUpload = require("../utils/cloudUpload");
 const prisma = require("../config/prisma");
 const createError = require("../utils/createError");
+const Joi = require('joi');
 const {createtShippingAddress} = require("../validator/user-validator")
 
 exports.getShippingAddress = async (req, res, next) => {
     try {
-        const shippingId = req.params.id;
-        const shipping = await prisma.shipping_Address.findUnique({
-            where: { id: Number(shippingId) }
-        });
-        if (!shipping) {
-            return res.status(404).json({ error: "Shipping address not found" });
-        }
-        res.json({ shipping });
+        const shipping_Address = await prisma.shipping_Address.findMany();
+        res.json({ shipping_Address });
+        
     } catch (err) {
+        
         next(err);
     }
 };
@@ -34,33 +31,9 @@ exports.postShippingAddress = async (req, res, next) => {
             },
         });
 
-        const imagesPromiseArray = req.files.map((file) => {
-            return cloudUpload(file.path);
-        });
+        
 
-        const imgUrlArray = await Promise.all(imagesPromiseArray);
-
-        const shippingAddressImages = imgUrlArray.map((imgUrl) => {
-            return {
-                url: imgUrl,
-                shippingAddressId: newShippingAddress.id,
-            };
-        });
-
-        await prisma.Shipping_Address_Image.createMany({
-            data: shippingAddressImages,
-        });
-
-        const finalShippingAddress = await prisma.shipping_Address.findFirst({
-            where: {
-                id: newShippingAddress.id,
-            },
-            include: {
-                shipping_Address_Images: true,
-            },
-        });
-
-        res.json({ newShippingAddress: finalShippingAddress });
+        res.json({ newShippingAddress });
     } catch (err) {
         next(err);
     }
@@ -85,16 +58,15 @@ exports.putShippingAddress = async (req, res, next) => {
 
 
 exports.deleteShippingAddress = async (req, res, next) => {
-    const { id } = req.params;
+    const {id} = req.params;
+    if (!id || isNaN(parseInt(id))) {
+        return res.status(400).json({ message: "Invalid shipping_Address ID" });
+    }
+
     try {
-        const rs = await prisma.shipping_Address.delete({
-            where: {
-                id: parseInt(id),
-                user: { id: req.user.id }
-            }
-        });
-        res.json({ message: "delete ShippingAddress ok", result: rs });
-    } catch (err) {
+        const rs = await prisma.shipping_Address.delete({ where : { id: parseInt(id) }});
+        res.json({msg: 'Delete ok', result : rs});
+    } catch(err) {
         next(err);
     }
 };

@@ -6,14 +6,11 @@ const {createOrdertSchema } =require("../validator/user-validator")
 //------------------------------------------------
 exports.getOrder = async (req, res, next) => {
     try {
-        const orderId = req.params.id;
-        const order = await prisma.order.findFirst({
-            where: { id: Number(orderId) }
-        });
-        res.json({ order });
-    } catch (err) {
+        const Order = await prisma.order.findMany();
+        res.json({ Order });
+      } catch (err) {
         next(err);
-    }
+      }
 };
 
 

@@ -12,10 +12,9 @@ exports.getBycategory = async (req, res, next) => {
   
   exports.createcategory = async (req, res, next) => {
     try {
-      const { name, count } = req.body;
+      const { name } = req.body;
       const data = {
-        name,
-        count: parseInt(count), // Convert count to an integer
+        name
       };
       const newCategory = await prisma.category.create({
         data: data,

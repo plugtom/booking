@@ -4,14 +4,11 @@ const prisma = require("../config/prisma");
 //------------------------------------------------
 exports.getFavorite = async (req, res, next) =>{
     try {
-        const FavoriteId = req.params.id;
-        const Favorite = await prisma.favorite.findMany({
-          where: { Favorite: FavoriteId } 
-        });
+        const Favorite = await prisma.favorite.findMany();
         res.json({ Favorite });
-    } catch (err) {
+      } catch (err) {
         next(err);
-    }
+      }
 }
 
 

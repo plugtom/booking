@@ -6,15 +6,13 @@ const {createCartSchema } =require("../validator/user-validator")
 //------------------------------------------------
 exports.getCart = async (req, res, next) => {
     try {
-        const cartId = req.params.id;
-        const cart = await prisma.cart.findMany({
-            where: { id: cartId }
-        });
-        res.json({ cart });
+        const carts = await prisma.cart.findMany();
+        res.json({ carts });
     } catch (err) {
         next(err);
     }
 };
+
 
 
 exports.postCart = async (req, res, next) => {

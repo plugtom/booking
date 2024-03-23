@@ -15,28 +15,28 @@ const router = express.Router();
 
 router.get("/ShippingAddress",userController.getShippingAddress)
 router.post("/ShippingAddress",userController.postShippingAddress)
-router.put("/ShippingAddress/:ShippingAddressId",userController.putShippingAddress)
-router.delete("/ShippingAddress/:ShippingAddressId",userController.deleteShippingAddress)
+router.put("/ShippingAddress/:id",userController.putShippingAddress)
+router.delete("/ShippingAddress/:id",userController.deleteShippingAddress)
 
 router.get("/Favorite",userFavorite.getFavorite)
 router.post("/Favorite",userFavorite.postFavorite)
-router.put("/Favorite/:FavoriteId",userFavorite.putFavorite)
-router.delete("/Favorite/:FavoriteId",userFavorite.deleteFavorite)
+router.put("/Favorite/:id",userFavorite.putFavorite)
+router.delete("/Favorite/:id",userFavorite.deleteFavorite)
 
 router.get("/Cart",userCart.deleteCart)
 router.post("/Cart",userCart.postCart)
-router.put("/Cart/:CartId",userCart.putCart)
-router.delete("/Cart/:CartId",userCart.deleteCart)
+router.put("/Cart/:id",userCart.putCart)
+router.delete("/Cart/:id",userCart.deleteCart)
 
 router.get("/Order",userOrder.deleteOrder)
 router.post("/Order",userOrder.postOrder)
-router.put("/Order/:OrderId",userOrder.putOrder)
-router.delete("/Order/:OrderId",userOrder.deleteOrder)
+router.put("/Order/:id",userOrder.putOrder)
+router.delete("/Order/:id",userOrder.deleteOrder)
 
 router.get("/payment",userpayment.getpayment)
 router.post("/payment",userpayment.postpayment)
-router.put("/payment/:paymentId",userpayment.putpayment)
-router.delete("/payment/:paymentId",userpayment.deletepayment)
+router.put("/payment/:id",userpayment.putpayment)
+router.delete("/payment/:id",userpayment.deletepayment)
 
 
 
