@@ -8,30 +8,44 @@ const { number } = require("joi");
 //การจัดการproduct
 exports.getproduct = async (req, res, next) => {
   try {
-    const product = await prisma.product.findMany();
-    res.json({ product });
+    const products = await prisma.product.findMany({
+      include: {
+        category: true,
+        Product_img: true,
+      },
+    });
+    res.json({ products });
   } catch (err) {
     next(err);
   }
 };
+
 
 exports.getproductByid = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id || isNaN(parseInt(id))) {
       return res.status(400).json({ message: "Invalid product ID" });
-  }
-    const product = await prisma.product.findFirst({
-      where: { id: parseInt(id) }
-    });
-    if (!product) {
-      throw new Error('Product not found');
     }
+
+    const product = await prisma.product.findFirst({
+      where: { id: parseInt(id) },
+      include: {
+        category: true,
+        Product_img: true,
+      },
+    });
+
+    if (!product) {
+      return createError(400, 'Product not found');
+    }
+
     res.json({ product });
   } catch (err) {
     next(err);
   }
 };
+
 
 
 

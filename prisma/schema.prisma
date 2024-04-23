@@ -37,21 +37,28 @@ model User {
 }
 
 model Shipping_Address {
-  id             Int      @id @default(autoincrement())
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId         Int      @map("user_id")
-  firstName      String   @map("first_name")
-  lastName       String   @map("last_name")
+  id             Int                    @id @default(autoincrement())
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId         Int                    @map("user_id")
+  firstName      String                 @map("first_name")
+  lastName       String                 @map("last_name")
   phone          String
-  identityNumber DateTime @map("identity_number") @db.Date
+  identityNumber DateTime               @map("identity_number") @db.Date
   branch         String?
   address        String
-  postalCode     String   @map("postal_code")
+  postalCode     String                 @map("postal_code")
   province       String
   district       String
-  subDistrict    String   @map("sub_district")
-  img            String
+  subDistrict    String                 @map("sub_district")
+  images         ShippingAddressImage[]
   Order          Order[]
+}
+
+model ShippingAddressImage {
+  id                Int              @id @default(autoincrement())
+  url               String
+  shippingAddress   Shipping_Address @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId Int              @map("shipping_address_id")
 }
 
 model Cart {
@@ -73,7 +80,6 @@ model Order {
   createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamp(0)
   user                User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId              Int              @map("user_id")
-  quantity            Int              @default(1)
   product             Product          @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId           Int              @map("product_id")
   ShippingAddress     Shipping_Address @relation(fields: [shippingAddressId], references: [id], onDelete: Cascade, onUpdate: Cascade)

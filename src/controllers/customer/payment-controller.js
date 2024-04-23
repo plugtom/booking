@@ -1,49 +1,43 @@
-const cloudUpload = require("../utils/cloudUpload");
-const prisma = require("../config/prisma");
-const createError = require("../utils/createError");
-const {createpaymentSchema } =require("../validator/user-validator")
+const prisma = require("../customer/config/prisma");
 
-//------------------------------------------------
 exports.getpayment = async (req, res, next) => {
     try {
-        const paymentId = req.params.id;
-        const payment = await prisma.payment.findMany({
-            where: { id: paymentId }
-        });
+        const payment = await prisma.payment.findMany();
         res.json({ payment });
-    } catch (err) {
+      } catch (err) {
         next(err);
-    }
+      }
 };
 
 exports.postpayment = async (req, res, next) => {
     try {
-        const { orderId, userId, ...value } = req.body;
-        const validatedValue = await createpaymentSchema.validateAsync(value);
+        const { orderId, amount, moneystatus, details } = req.body;
 
-        const newPayment = await prisma.payment.create({
-            data: {
-                ...validatedValue,
-                Order: {
-                    connect: {
-                        id: Number(orderId),
-                    },
-                },
-                user: {
-                    connect: {
-                        id: Number(userId),
-                    },
-                },
-            }
-        });
+const newPayment = await prisma.payment.create({
+    data: {
+        amount: parseInt(amount), // Convert amount to integer
+        moneystatus: moneystatus === 'true',
+        details,
+        order: {
+            connect: {
+                id: Number(orderId),
+            },
+        },
+        user: {
+            connect: {
+                id: req.user.id,
+            },
+        },
+    },
+});
+
+        
 
         res.json({ message: "post payment", result: newPayment });
     } catch (err) {
         next(err);
     }
 };
-
-
 
 exports.putpayment = async (req, res, next) => {
     const { id } = req.params;
@@ -61,7 +55,6 @@ exports.putpayment = async (req, res, next) => {
     }
 };
 
-
 exports.deletepayment = async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -76,4 +69,3 @@ exports.deletepayment = async (req, res, next) => {
         next(err);
     }
 };
-

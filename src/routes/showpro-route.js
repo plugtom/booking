@@ -6,6 +6,6 @@ const router  = exprss.Router()
 
 router.get("/landing",showproductController.getProductsLanding );
 router.get("/", showproductController.getProducts);
-router.get("/:productId", authenticate, showproductController.getProducts);
+router.get("/:id",  showproductController.getProducts);
 
 module.exports = router;

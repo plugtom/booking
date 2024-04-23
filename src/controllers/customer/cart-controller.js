@@ -1,7 +1,7 @@
-const cloudUpload = require("../utils/cloudUpload");
-const prisma = require("../config/prisma");
-const createError = require("../utils/createError");
-const {createCartSchema } =require("../validator/user-validator")
+const cloudUpload = require("../../utils/cloudUpload");
+const prisma = require("../../config/prisma");
+const createError = require("../../utils/createError");
+const {createCartSchema } =require("../../validator/user-validator")
 
 //------------------------------------------------
 exports.getCart = async (req, res, next) => {
@@ -17,21 +17,20 @@ exports.getCart = async (req, res, next) => {
 
 exports.postCart = async (req, res, next) => {
     try {
-        const value = await createCartSchema.validateAsync(req.body);
+        const { totalBeforeDiscount, deliveryFee, total, productId } = req.body;
+
         const newCart = await prisma.cart.create({
             data: {
-                ...value,
+                totalBeforeDiscount,
+                deliveryFee,
+                total,
                 product: {
                     connect: {
                         id: Number(productId),
                     },
                 },
-                user: {
-                    connect: {
-                        id: Number(userId),
-                    },
-                },
-            }
+                user: { connect: { id: req.user.id } },
+            },
         });
 
         res.json({ message: "post Cart", result: newCart });
@@ -39,6 +38,7 @@ exports.postCart = async (req, res, next) => {
         next(err);
     }
 };
+
 
 
 exports.putCart = async (req, res, next) => {

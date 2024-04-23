@@ -1,7 +1,7 @@
-const cloudUpload = require("../utils/cloudUpload");
-const prisma = require("../config/prisma");
-const createError = require("../utils/createError");
-const {createOrdertSchema } =require("../validator/user-validator")
+const cloudUpload = require("../../utils/cloudUpload");
+const prisma = require("../../config/prisma");
+const createError = require("../../utils/createError");
+const {createOrdertSchema } =require("../../validator/user-validator")
 
 //------------------------------------------------
 exports.getOrder = async (req, res, next) => {
@@ -16,11 +16,14 @@ exports.getOrder = async (req, res, next) => {
 
 exports.postOrder = async (req, res, next) => {
     try {
-        const value = await createOrdertSchema.validateAsync(req.body);
-        const { productId, userId, shippingAddressId } = req.body;
+        const { totalBeforeDiscount, deliveryFee, total, productId, shippingAddressId } = req.body;
+
         const newOrder = await prisma.order.create({
             data: {
-                ...value,
+                totalBeforeDiscount,
+                deliveryFee,
+                total,
+                
                 product: {
                     connect: {
                         id: Number(productId),
@@ -28,21 +31,23 @@ exports.postOrder = async (req, res, next) => {
                 },
                 user: {
                     connect: {
-                        id: Number(userId),
+                        id: req.user.id,
                     },
                 },
-                Shipping_Address: {
+                ShippingAddress: {
                     connect: {
                         id: Number(shippingAddressId),
                     },
-                }
-            }
+                },
+            },
         });
+
         res.json({ message: "post Order", result: newOrder });
     } catch (err) {
         next(err);
     }
 };
+
 
 
 exports.putOrder = async (req, res, next) => {

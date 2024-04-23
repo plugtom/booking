@@ -1,9 +1,6 @@
 const cloudUpload = require("../utils/cloudUpload");
 const prisma = require("../config/prisma");
 const createError = require("../utils/createError");
-const Joi = require('joi');
-const {createtShippingAddress} = require("../validator/user-validator")
-
 exports.getShippingAddress = async (req, res, next) => {
     try {
         const shipping_Address = await prisma.shipping_Address.findMany();
@@ -15,29 +12,64 @@ exports.getShippingAddress = async (req, res, next) => {
     }
 };
 
-
 exports.postShippingAddress = async (req, res, next) => {
     try {
-        const value = await createtShippingAddress.validateAsync(req.body);
+        const { firstName, lastName, phone, identityNumber, address, postalCode, province, district, subDistrict } = req.body;
+
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ error: "ผู้ใช้ไม่ได้รับการรับรองสิทธิ์" });
+        }
 
         const newShippingAddress = await prisma.shipping_Address.create({
             data: {
-                ...value,
-                user: {
-                    connect: {
-                        id: req.user.id,
-                    },
-                },
+                firstName,
+                lastName,
+                phone,
+                identityNumber: new Date(identityNumber),
+                address,
+                postalCode,
+                province,
+                district,
+                subDistrict,
+                user: { connect: { id: req.user.id } } 
             },
         });
 
-        
-
-        res.json({ newShippingAddress });
+        const imagesPromiseArray = req.files.map((file) => {
+            return cloudUpload(file.path);
+          });
+      
+          const imgUrlArray = await Promise.all(imagesPromiseArray);
+      
+          const ShippingImages = imgUrlArray.map((imgUrl) => {
+            return {
+              url: imgUrl,
+              shippingAddressId: newShippingAddress.id,
+            };
+          });
+      
+          await prisma.ShippingAddressImage.createMany({
+            data: ShippingImages,
+          });
+      
+          const newShippingWithImages = await prisma.shipping_Address.findUnique({
+            where: {
+              id: newShippingAddress.id,
+            },
+            include: {
+                images: true,
+            },
+          });
+      
+        res.json({ newShippingAddress: newShippingAddress, newShippingWithImages: newShippingWithImages });
     } catch (err) {
         next(err);
     }
 };
+
+
+
+
 
 
   
